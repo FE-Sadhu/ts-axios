@@ -13,7 +13,7 @@ function normalizeHeaderName(headers: any, normalizedName: string): void {
   })
 }
 
-export function processHeaders(headers: any, data: any): any {
+export function processHeaders(headers: any, data: any): any { // 处理请求头
   normalizeHeaderName(headers, 'Content-Type')
 
   if (isPlainObject(data)) {
@@ -23,4 +23,25 @@ export function processHeaders(headers: any, data: any): any {
   }
 
   return headers
+}
+
+export function parseHeaders(headers: string): any { // 解析响应头，字符串变为对象
+  let parsed = Object.create(null)
+  if (!headers) {
+    return parsed
+  }
+
+  headers.split('\r\n').forEach((line) => { // 按回车符+换行符分割
+    let [key, val] = line.split(':')
+    key = key.trim().toLowerCase()
+    if (!key) {
+      return // 在 forEach 中是跳到下次循环
+    }
+    if (val) {
+      val = val.trim()
+    }
+    parsed[key] = val
+  })
+
+  return parsed
 }
