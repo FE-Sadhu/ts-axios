@@ -17,3 +17,12 @@ export function isPlainObject(val: any): val is Object {
   // 判断是否为普通对象。假如对于 formData 的话，toString 后会是 [object FormData]
   return toString.call(val) === '[object Object]'
 }
+
+export function extend<T, U>(to: T, from: U): U & T {
+  // 辅助函数 -> 目的是把 from 上的属性都拓展到 to 中。包括原型上的属性
+  for (const key in from) {
+    ;(to as T & U)[key] = from[key] as any
+  }
+
+  return to as T & U
+}
