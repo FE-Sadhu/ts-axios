@@ -45,7 +45,7 @@ import axios from '../../src/index'
 //   }
 // })
 
-interface ResponseData<T = any> {
+interface ResponseData<T=any> {
   code: number
   result: T
   message: string
