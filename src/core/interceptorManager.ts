@@ -1,4 +1,4 @@
-import { ResolvedFn, RejectedFn, AxiosInterceptorManage } from '../types/index'
+import { ResolvedFn, RejectedFn } from '../types/index'
 
 interface Interceptor<T> {
   // 拦截器的接口
@@ -6,7 +6,7 @@ interface Interceptor<T> {
   rejected?: RejectedFn
 }
 
-export default class InterceptorManager<T> implements AxiosInterceptorManage<T> {
+export default class InterceptorManager<T> {
   private interceptor: Array<Interceptor<T> | null> // 一个数组，用来存储拦截器
 
   constructor() {

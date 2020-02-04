@@ -49,6 +49,11 @@ export interface AxiosError extends Error {
 }
 
 export interface Axios {
+  interceptors: {
+    request: AxiosInterceptorManage<AxiosRequestConfig>
+    response: AxiosInterceptorManage<AxiosResponse>
+  }
+
   request<T = any>(config: AxiosRequestConfig): AxiosPromise<T> // 加入泛型的目的是在请求的时候支持传入一个类型
 
   get<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>

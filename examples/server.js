@@ -80,6 +80,8 @@ router.get('/extend/user', function(req, res) {
   })
 })
 
+registerInterceptorRrouter()
+
 registerExtendRouter()
 
 app.use(router)
@@ -113,6 +115,12 @@ function registerExtendRouter() {
 
   router.patch('/extend/patch', function(req, res) {
     res.json(req.body)
+  })
+}
+
+function registerInterceptorRrouter() {
+  router.get('/interceptor/get', function (req, res) {
+    res.end('hello')
   })
 }
 
