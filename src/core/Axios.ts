@@ -2,7 +2,6 @@ import {
   AxiosRequestConfig,
   AxiosPromise,
   Method,
-  AxiosInterceptorManage,
   AxiosResponse,
   ResolvedFn,
   RejectedFn
@@ -23,8 +22,10 @@ interface PromiseChain<T> {
 
 export default class Axios {
   interceptors: Interceptors
+  defaults: AxiosRequestConfig
 
-  constructor() {
+  constructor(initConfig: AxiosRequestConfig) {
+    this.defaults = initConfig
     this.interceptors = {
       request: new InterceptorManager<AxiosRequestConfig>(),
       response: new InterceptorManager<AxiosResponse>()
