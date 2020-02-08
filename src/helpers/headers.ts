@@ -1,4 +1,5 @@
-import { isPlainObject } from './utill'
+import { isPlainObject, deepMerge } from './utill'
+import { Method } from '../types/index'
 /**
  * 请求头的处理
  */
@@ -47,4 +48,20 @@ export function parseHeaders(headers: string): any {
   })
 
   return parsed
+}
+
+// 处理 merge 默认 config 和自定义 config 后的 headers 字段
+export function flattenHeaders(headers: any, method: Method): any {
+  if (!headers) {
+    return headers
+  }
+  headers = deepMerge(headers.common || {}, headers[method] || {}, headers)
+
+  const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common']
+
+  methodsToDelete.forEach(method => {
+    delete headers[method]
+  })
+
+  return headers
 }
