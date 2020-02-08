@@ -26,3 +26,27 @@ export function extend<T, U>(to: T, from: U): U & T {
 
   return to as T & U
 }
+
+// 自己实现个深拷贝，不用引入 lodash 那样考虑那么多情况，只考虑普通对象
+export function deepMerge(...objs: any[]): any {
+  const result = Object.create(null)
+
+  objs.forEach(obj => {
+    if (obj) {
+      Object.keys(obj).forEach(key => {
+        const val = obj[key]
+        if (isPlainObject(val)) {
+          if (isPlainObject(result[key])) {
+            result[key] = deepMerge(result[key], val)
+          } else {
+            result[key] = deepMerge(val)
+          }
+        } else {
+          result[key] = val
+        }
+      })
+    }
+  })
+
+  return result
+}
