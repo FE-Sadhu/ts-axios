@@ -1,4 +1,3 @@
-import { transformRequest, transformResponse } from '../helpers/data'
 // 这个文件作为整个项目中公共的类型定义文件
 export type Method =
   | 'get'
@@ -73,9 +72,15 @@ export interface Axios {
 }
 
 export interface AxiosInstance extends Axios {
+  // 描述被使用的 axios() 的接口
   // 混合接口
   <T = any>(config: AxiosRequestConfig): AxiosPromise<T>
   <T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T> // 函数重载
+}
+
+export interface AxiosStatic extends AxiosInstance {
+  // 扩展这个接口是因为 axios.create() 创造静态实例用
+  create(config?: AxiosRequestConfig): AxiosInstance
 }
 
 export interface AxiosInterceptorManage<T> {

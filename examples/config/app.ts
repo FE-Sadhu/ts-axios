@@ -19,6 +19,8 @@ let data = qs.parse(url.split('?')[1]);
       e: ''
   }
 */
+
+// 验证默认配置 defaults 与传入配置 config 的合并
 axios.defaults.headers.common['test2'] = 123
 
 axios({
@@ -32,6 +34,7 @@ axios({
   console.log(res.data)
 }).catch(e => console.log(e))
 
+// 验证请求配置和响应配置化 -> transformRequest & transformResponse
 axios('/config/post', {
   transformRequest: [function(data) {
     return qs.stringify(data)
@@ -50,3 +53,26 @@ axios('/config/post', {
 }).then(res => {
   console.log(res.data)
 }).catch( e => console.log(e))
+
+// 验证 axios.create(config) 预先配置部分 config
+const instance = axios.create({
+  transformRequest: [function(data) {
+    return qs.stringify(data)
+    // return data
+  }, ...(axios.defaults.transformRequest as AxiosTransformer[])],
+  transformResponse: [...(axios.defaults.transformResponse as AxiosTransformer[]), function(data) {
+    if (typeof data === 'object') {
+      data.b = 2
+    }
+    return data
+  }]
+})
+
+instance('/config/post', {
+  method: 'post',
+  data: {
+    a: 1
+  }
+}).then(res => {
+  console.log(res.data)
+}).catch(e => console.log(e))
