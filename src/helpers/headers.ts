@@ -55,7 +55,7 @@ export function flattenHeaders(headers: any, method: Method): any {
   if (!headers) {
     return headers
   }
-  headers = deepMerge(headers.common || {}, headers[method] || {}, headers)
+  headers = deepMerge(headers.common || {}, headers[method] || {}, headers) // 参数在后面的话，遇到相同 key 会覆盖的前面
 
   const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common']
 

@@ -3,16 +3,32 @@
  */
 
 import { AxiosRequestConfig } from './types'
+import { processHeaders } from './helpers/headers'
+import { transformRequest, transformResponse } from './helpers/data'
 
 const defaults: AxiosRequestConfig = {
   method: 'get',
-  timeout: 0,
+  timeout: 0, // 0 代表无超时时间
   headers: {
     common: {
       // 自定义设置 common 字段，目的是，common 字段下的配置是不管发什么请求(get/post/put...)都需要加的通用请求头配置
       Accept: 'application/json, text/plain, */*'
     }
-  }
+  },
+  // 请求配置和响应配置可以理解为默认的拦截器功能，拦截器更灵活。
+  transformRequest: [
+    // 发送前的请求配置,只能用在 put post patch 这几个请求方法
+    function(data: any, headers: any): any {
+      processHeaders(headers, data)
+      return transformRequest(data)
+    }
+  ],
+  transformResponse: [
+    // 响应数据传给 then/catch 前的响应配置
+    function(data: any): any {
+      return transformResponse(data)
+    }
+  ]
 }
 
 const methodsNoData = ['delete', 'get', 'head', 'options']

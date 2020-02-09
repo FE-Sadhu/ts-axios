@@ -1,3 +1,4 @@
+import { transformRequest, transformResponse } from '../helpers/data'
 // 这个文件作为整个项目中公共的类型定义文件
 export type Method =
   | 'get'
@@ -23,6 +24,8 @@ export interface AxiosRequestConfig {
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  transformRequest?: AxiosTransformer | AxiosTransformer[] // 仅针对 post put patch，发出请求前修改请求数据
+  transformResponse?: AxiosTransformer | AxiosTransformer[] //  在传递给 then/catch 前，允许修改响应数据
 
   [propName: string]: any
 }
@@ -88,4 +91,8 @@ export interface ResolvedFn<T> {
 
 export interface RejectedFn {
   (error: any): any
+}
+
+export interface AxiosTransformer {
+  (data: any, headers?: any): any
 }

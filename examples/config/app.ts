@@ -1,5 +1,6 @@
 import axios from '../../src/index'
 import qs from 'qs' // 这个例子中我们额外引入了 qs 库，它是一个查询字符串解析和字符串化的库。 编码或解析数据成 url 参数般形式。例子如下
+import { AxiosTransformer } from '../../src/types/index';
 /** 
  * qs 库的例子:
  * 
@@ -29,4 +30,23 @@ axios({
   }
 }).then(res => {
   console.log(res.data)
-})
+}).catch(e => console.log(e))
+
+axios('/config/post', {
+  transformRequest: [function(data) {
+    return qs.stringify(data)
+    // return data
+  }, ...(axios.defaults.transformRequest as AxiosTransformer[])],
+  transformResponse: [...(axios.defaults.transformResponse as AxiosTransformer[]), function(data) {
+    if (typeof data === 'object') {
+      data.b = 2
+    }
+    return data
+  }],
+  method: 'post',
+  data: {
+    a: 1
+  }
+}).then(res => {
+  console.log(res.data)
+}).catch( e => console.log(e))
