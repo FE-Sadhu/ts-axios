@@ -25,68 +25,84 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 const router = express.Router()
 
-router.get('/simple/get', function(req, res) {
-  res.json({
-    msg: `hello world`
-  })
-})
+registerSimpleRouter()
 
-router.get('/base/get', function(req, res) {
-  res.json(req.query)
-})
+registerBaseRouter()
 
-router.post('/base/post', function(req, res) {
-  res.json(req.body)
-})
+registerErrorRouter()
 
-router.post('/base/buffer', function(req, res) {
-  let msg = []
-  req.on('data', (chunk) => { // on 继承至 Node.js EventEmitter 类，事件监听
-    chunk && msg.push(chunk)
-  })
-  req.on('end', () => {
-    let buf = Buffer.concat(msg) // 通过 Buffer.concat 可以把一个数组转成一个 Buffer 对象
-    res.json(buf.toJSON())
-  })
-})
+registerExtendRouter()
 
-router.get('/error/get', function(req, res) {
-  if (Math.random() > 0.5) {
-    res.json({
-      msg: `hello world`
-    })
-  } else {
-    res.status(500)
-    res.end()
-  }
-})
-
-router.get('/error/timeout', function(req, res) {
-  setTimeout(() => {
-    res.json({
-      msg: `hello world`
-    })
-  }, 3000)
-})
-
-router.get('/extend/user', function(req, res) {
-  res.json({
-    code: 0,
-    message: 'ok',
-    result: {
-      name: 'jack',
-      age: 18
-    }
-  })
-})
-
-registerInterceptorRrouter()
+registerInterceptorRouter()
 
 registerExtendRouter()
 
 registerConfigRouter()
 
-app.use(router)
+registerCancelRouter()
+
+function registerSimpleRouter() {
+  router.get('/simple/get', function(req, res) {
+    res.json({
+      msg: `hello world`
+    })
+  })
+}
+
+function registerBaseRouter() {
+  router.get('/base/get', function(req, res) {
+    res.json(req.query)
+  })
+  
+  router.post('/base/post', function(req, res) {
+    res.json(req.body)
+  })
+  
+  router.post('/base/buffer', function(req, res) {
+    let msg = []
+    req.on('data', (chunk) => { // on 继承至 Node.js EventEmitter 类，事件监听
+      chunk && msg.push(chunk)
+    })
+    req.on('end', () => {
+      let buf = Buffer.concat(msg) // 通过 Buffer.concat 可以把一个数组转成一个 Buffer 对象
+      res.json(buf.toJSON())
+    })
+  })
+}
+
+function registerErrorRouter() {
+  router.get('/error/get', function(req, res) {
+    if (Math.random() > 0.5) {
+      res.json({
+        msg: `hello world`
+      })
+    } else {
+      res.status(500)
+      res.end()
+    }
+  })
+  
+  router.get('/error/timeout', function(req, res) {
+    setTimeout(() => {
+      res.json({
+        msg: `hello world`
+      })
+    }, 3000)
+  })
+}
+
+function registerExtendRouter() {
+  router.get('/extend/user', function(req, res) {
+    res.json({
+      code: 0,
+      message: 'ok',
+      result: {
+        name: 'jack',
+        age: 18
+      }
+    })
+  })
+}
 
 function registerExtendRouter() {
   router.get('/extend/get', function(req, res) {
@@ -120,7 +136,7 @@ function registerExtendRouter() {
   })
 }
 
-function registerInterceptorRrouter() {
+function registerInterceptorRouter() {
   router.get('/interceptor/get', function (req, res) {
     res.end('hello')
   })
@@ -132,6 +148,21 @@ function registerConfigRouter() {
   })
 }
 
+function registerCancelRouter() {
+  router.get('/cancel/get', function(req, res) {
+    setTimeout(() => {
+      res.json('hello')
+    }, 1000)
+  })
+
+  router.get('/cancel/post', function(req, res) {
+    setTimeout(() => {
+      res.json(req.body)
+    }, 1000)
+  })
+}
+
+app.use(router)
 const port = process.env.PORT || 8080
 module.exports = app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}, Ctrl+C to stop`)

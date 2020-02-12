@@ -113,7 +113,7 @@ export interface CancelToken {
   promise: Promise<Cancel> // <a>,这个 a 就是 resolve(参数) 方法的参数的类型,这里就是 reason
   reason?: Cancel // resolve 函数的参数
 
-  throwIfRequested(): void // 判断是否执行过 cancel() 取消请求了
+  throwIfRequested(): void // 判断是否执行过 cancel() 取消请求了，若有，做一些处理。
 }
 
 export interface Canceler {
