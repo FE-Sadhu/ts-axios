@@ -29,6 +29,14 @@ export default class CancelToken {
     })
   }
 
+  throwIfRequested() {
+    // 判断是否一个请求被取消了(执行过 cancel() 了) -> 很简单，没执行过 cancel() 的话 this.reason 没赋值
+    if (this.reason) {
+      // 证明用户执行了 cancel() 方法
+      throw this.reason
+    }
+  }
+
   static source(): CancelTokenSource {
     // 类似工厂函数
     let cancel!: Canceler // 这里为什么要断言，因为下面 return 出去的时候的 cancel 可能认为没赋上值

@@ -112,6 +112,8 @@ export interface CancelToken {
   // CancelToken 的实例类型，对比下面的 CancelTokenStatic
   promise: Promise<Cancel> // <a>,这个 a 就是 resolve(参数) 方法的参数的类型,这里就是 reason
   reason?: Cancel // resolve 函数的参数
+
+  throwIfRequested(): void // 判断是否执行过 cancel() 取消请求了
 }
 
 export interface Canceler {
@@ -138,10 +140,12 @@ export interface CancelTokenStatic {
 }
 
 // Cancel 类
-export interface Cancel { // Cancel 类的实例类型
+export interface Cancel {
+  // Cancel 类的实例类型
   message?: string
 }
 
-export interface CancelStatic { // Cancel 类的类类型
-  new(message?: string): Cancel
+export interface CancelStatic {
+  // Cancel 类的类类型
+  new (message?: string): Cancel
 }
