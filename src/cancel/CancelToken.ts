@@ -1,16 +1,21 @@
+/**
+ * 取消功能主要就是利用 promise 做异步分离，外部调用 cancel 函数的时候会让 promise 状态变为 fulfilled,然后执行 xhr.abort()
+ */
+
 import { CancelExecutor, CancelTokenSource, Canceler } from '../types/index'
+import Cancel from './Cancel'
 
 interface ResolvePromise {
-  (reason?: string): void
+  (reason?: Cancel): void
 }
 export default class CancelToken {
-  promise: Promise<string>
-  reason?: string
+  promise: Promise<Cancel>
+  reason?: Cancel
 
   constructor(executor: CancelExecutor) {
     let resolvePromise: ResolvePromise
 
-    this.promise = new Promise<string>(resolve => {
+    this.promise = new Promise<Cancel>(resolve => {
       resolvePromise = resolve
     })
 
@@ -19,7 +24,7 @@ export default class CancelToken {
         // 保证只调用一次
         return
       }
-      this.reason = message
+      this.reason = new Cancel(message)
       resolvePromise(this.reason)
     })
   }
