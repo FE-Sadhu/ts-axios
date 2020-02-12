@@ -1,9 +1,12 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const WebpackConfig = require('./webpack.config')
+
+require('./server2')
 
 const app = express()
 const compiler = webpack(WebpackConfig) // compiler 是编译的结果
@@ -20,8 +23,9 @@ app.use(webpackHotMiddleware(compiler))
 
 app.use(express.static(__dirname)) // 起服务器后，当前文件的静态资源目录
 
-app.use(bodyParser.json()) // parse 发送过来的 response body 的数据
+app.use(bodyParser.json()) // parse 发送过来的 response body 的数据,这样才能在路由中 res.json(req.body) 才传得到数据
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser()) // 这才能在 res.json(req.cookies) 中拿得到设置的 cookie （被该中间件序列化后的 cookie ）
 
 const router = express.Router()
 
@@ -40,6 +44,8 @@ registerExtendRouter()
 registerConfigRouter()
 
 registerCancelRouter()
+
+registerMoreRouter()
 
 function registerSimpleRouter() {
   router.get('/simple/get', function(req, res) {
@@ -159,6 +165,12 @@ function registerCancelRouter() {
     setTimeout(() => {
       res.json(req.body)
     }, 1000)
+  })
+}
+
+function registerMoreRouter() {
+  router.get('/more/get', (req, res) => {
+    res.json(req.cookies)
   })
 }
 
