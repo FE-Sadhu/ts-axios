@@ -29,6 +29,8 @@ export interface AxiosRequestConfig {
   withCredentials?: boolean // 跨域时让请求带上请求域(目标)的 cookie
   xsrfCookieName?: string
   xsrfHeaderName?: string
+  onDownloadProgress?: (e: ProgressEvent) => void
+  onUploadProgress?: (e: ProgressEvent) => void
 
   [propName: string]: any
 }
