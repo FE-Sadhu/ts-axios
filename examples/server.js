@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const multipart = require('connect-multiparty') // 通过这个中间件，我们就可以处理上传请求并且可以把上传的文件存储在 upload-file(自定义的名字) 目录下
+const atob = require('atob') // nodejs 端的 base64 编码
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
@@ -187,6 +188,19 @@ function registerMoreRouter() {
   router.post('/more/upload', function(req, res) {
     console.log(req.body, req.files)
     res.end('upload success!')
+  })
+
+  // 用于服务端校验 auth 用
+  router.post('/more/post', function(req, res) {
+    const auth = req.headers.authorization
+    const [type, credentials] = auth.split(' ')
+    console.log(atob(credentials))
+    const [username, password] = atob(credentials).split(':')
+    if (type === 'Basic' && username === 'Sadhu' && password === '123456') {
+      res.json(req.body)
+    } else {
+      res.end('UnAuthorization')
+    }
   })
 }
 

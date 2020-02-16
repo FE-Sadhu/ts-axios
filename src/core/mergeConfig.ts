@@ -35,7 +35,7 @@ function deepMergeStrat(val1: any, val2: any): any {
 const strats = Object.create(null) // 建立一个策略函数的 map 映射关系
 
 const stratKeysFromVal2 = ['url', 'params', 'data']
-const stratKeysDeepMerge = ['headers']
+const stratKeysDeepMerge = ['headers', 'auth']
 
 stratKeysFromVal2.forEach(key => {
   strats[key] = fromVal2Strat // 特殊字段与对应策略函数的 map 映射

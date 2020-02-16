@@ -31,6 +31,7 @@ export interface AxiosRequestConfig {
   xsrfHeaderName?: string
   onDownloadProgress?: (e: ProgressEvent) => void
   onUploadProgress?: (e: ProgressEvent) => void
+  auth?: AxiosBasicCredentials // 原始的服务器用于验证用户代理身份的凭证,现在一般用 token
 
   [propName: string]: any
 }
@@ -153,4 +154,10 @@ export interface Cancel {
 export interface CancelStatic {
   // Cancel 类的类类型
   new (message?: string): Cancel
+}
+
+// authenticate
+export interface AxiosBasicCredentials {
+  username: string
+  password: string
 }

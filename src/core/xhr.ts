@@ -30,7 +30,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       xsrfCookieName,
       xsrfHeaderName,
       onDownloadProgress,
-      onUploadProgress
+      onUploadProgress,
+      auth
     } = config
 
     const request = new XMLHttpRequest()
@@ -108,6 +109,10 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
 
     function processHeaders(): void {
+      if (auth) {
+        headers['Authorization'] = 'Basic ' + btoa(auth.username + ':' + auth.password) // btoa 是 base64 编码
+      }
+
       if (isFormData(data)) {
         // 如果传的数据是 formData 类型的话，把默认配置或用户设置的 Content-Type 给删除掉。
         // 浏览器检查到传的数据是 formData 类型后，会自动设置 Content-Type 为 multipart/form-data
