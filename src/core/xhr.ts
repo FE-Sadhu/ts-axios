@@ -1,6 +1,8 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import { parseHeaders } from '../helpers/headers'
 import { createError } from '../helpers/error'
+import { isURLSameOrigin } from '../helpers/url'
+import cookie from '../helpers/cookie'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
@@ -12,7 +14,9 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       responseType,
       timeout,
       cancelToken,
-      withCredentials
+      withCredentials,
+      xsrfCookieName,
+      xsrfHeaderName
     } = config
 
     const request = new XMLHttpRequest()
@@ -65,6 +69,14 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     request.ontimeout = function handleTimeout() {
       // 超时
       reject(createError(`Timeout of ${timeout} ms exceeded`, config, 'ECONNABORTED', request)) // 'ECONNABORTED' 是网络术语，表示被终止的请求
+    }
+
+    // 若有 token ,从 cookie 取出并放在请求头
+    if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName) {
+      const token = cookie.read(xsrfCookieName)
+      if (token && xsrfHeaderName) {
+        headers[xsrfHeaderName] = token
+      }
     }
 
     Object.keys(headers).forEach(name => {

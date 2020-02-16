@@ -21,7 +21,11 @@ app.use(webpackDevMiddleware(compiler, { // 编译的结果直接作为中间件
 
 app.use(webpackHotMiddleware(compiler))
 
-app.use(express.static(__dirname)) // 起服务器后，当前文件的静态资源目录
+app.use(express.static(__dirname, { // 起服务器后，当前文件的静态资源目录
+  setHeaders (res) {
+    res.cookie('XSRF-TOKEN-D', '123abc') // 这是中间件的作用，等于在服务端为客户端种了 cookie => SetCookies('XSRF-TOKEN-D', '123abc')
+  }
+}))
 
 app.use(bodyParser.json()) // parse 发送过来的 response body 的数据,这样才能在路由中 res.json(req.body) 才传得到数据
 app.use(bodyParser.urlencoded({ extended: true }))

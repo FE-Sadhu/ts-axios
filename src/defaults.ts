@@ -15,6 +15,10 @@ const defaults: AxiosRequestConfig = {
       Accept: 'application/json, text/plain, */*'
     }
   },
+
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+
   // 请求配置和响应配置可以理解为默认的拦截器功能，拦截器更灵活。
   transformRequest: [
     // 发送前的请求配置,只能用在 put post patch 这几个请求方法

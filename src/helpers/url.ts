@@ -4,6 +4,11 @@
 
 import { isDate, isPlainObject } from './utill'
 
+interface URLOrigin {
+  protocol: string
+  host: string
+}
+
 function encode(val: string): string {
   return encodeURIComponent(val)
     .replace(/40%/g, '@')
@@ -58,4 +63,28 @@ export function buildURL(url: string, params?: any): string {
   }
 
   return url
+}
+
+// 判断是否是同域请求 -> 协议、域名、端口号
+export function isURLSameOrigin(requestURL: string): boolean {
+  const parsedOrigin = resolveURL(requestURL)
+
+  return (
+    parsedOrigin.protocol === currentOrigin.protocol && parsedOrigin.host === currentOrigin.host
+  )
+}
+
+// 这里利用 a 标签来获得协议和主机
+const urlParsingNode = document.createElement('a')
+const currentOrigin = resolveURL(window.location.href) // 传入当前页面的 url ，得到当前页面的 protocol, host
+
+// 找到传入 url 的协议和主机
+function resolveURL(url: string): URLOrigin {
+  urlParsingNode.setAttribute('href', url)
+  const { protocol, host } = urlParsingNode
+
+  return {
+    protocol,
+    host
+  }
 }

@@ -26,7 +26,9 @@ export interface AxiosRequestConfig {
   transformRequest?: AxiosTransformer | AxiosTransformer[] // 仅针对 post put patch，发出请求前修改请求数据
   transformResponse?: AxiosTransformer | AxiosTransformer[] //  在传递给 then/catch 前，允许修改响应数据
   cancelToken?: CancelToken // CancelToken() 的实例类型
-  withCredentials: boolean // 跨域时让请求带上请求域(目标)的 cookie
+  withCredentials?: boolean // 跨域时让请求带上请求域(目标)的 cookie
+  xsrfCookieName?: string
+  xsrfHeaderName?: string
 
   [propName: string]: any
 }
