@@ -32,6 +32,7 @@ export interface AxiosRequestConfig {
   onDownloadProgress?: (e: ProgressEvent) => void
   onUploadProgress?: (e: ProgressEvent) => void
   auth?: AxiosBasicCredentials // 原始的服务器用于验证用户代理身份的凭证,现在一般用 token
+  validateStatus?: (status: number) => boolean
 
   [propName: string]: any
 }

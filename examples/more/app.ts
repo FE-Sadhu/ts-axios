@@ -99,13 +99,34 @@ import axios from '../../src/index';
  * 测试配置 auth
  */
 
-axios.post('/more/post', {
-  a: 1
-}, {
-  auth: {
-    username: 'Sadhu',
-    password: '123456'
+// axios.post('/more/post', {
+//   a: 1
+// }, {
+//   auth: {
+//     username: 'Sadhu',
+//     password: '123456'
+//   }
+// }).then(res => {
+//   console.log(res)
+// }).catch() // 服务端 server 处作了校验，能请求成功就证明通过了服务端校验。
+
+/**
+ * 自定义合法状态码 demo
+ */
+
+axios.get('/more/304').then(res => {
+  console.log(res)
+}).catch(err => {
+  console.log(err.message)
+})
+
+
+axios.get('/more/304', {
+  validateStatus(status) {
+    return status >= 200 && status < 400
   }
 }).then(res => {
   console.log(res)
-}).catch() // 服务端 server 处作了校验，能请求成功就证明通过了服务端校验。
+}).catch(err => {
+  console.log(err.message)
+})
