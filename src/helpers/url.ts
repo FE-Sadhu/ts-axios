@@ -2,7 +2,7 @@
  * 根据传的 config 中的 params 拼接 url
  */
 
-import { isDate, isPlainObject } from './utill'
+import { isDate, isPlainObject, isURLSearchParams } from './utill'
 
 interface URLOrigin {
   protocol: string
@@ -10,7 +10,7 @@ interface URLOrigin {
 }
 
 function encode(val: string): string {
-  return encodeURIComponent(val)
+  return encodeURIComponent(val) // 等同于 decode 某些特殊字符
     .replace(/40%/g, '@')
     .replace(/%3A/gi, ':') // i 是大小写都不区分
     .replace(/%24/g, '$')
@@ -20,39 +20,54 @@ function encode(val: string): string {
     .replace(/%5D/gi, ']')
 }
 
-export function buildURL(url: string, params?: any): string {
+export function buildURL(
+  url: string,
+  params?: any,
+  paramsSerializer?: (params: any) => void
+): string {
   if (!params) {
     const markIndex = url.indexOf('#') // 处理 hash
     url = markIndex === -1 ? url : url.slice(0, markIndex)
     return url
   }
-  const parts: string[] = [] // 每个 item 是键值对 key=val，见 34 行
 
-  Object.keys(params).forEach(key => {
-    const val = params[key]
-    if (val === null || typeof val === 'undefined') {
-      return // 跳出 forEach 的本轮循环，进入下一轮循环
-    }
+  let serializedParams // 序列化好后的 params
 
-    let values = [] // 为不同 params 情况作统一处理用的临时数组
-    if (Array.isArray(val)) {
-      values = val
-      key += '[]'
-    } else {
-      values = [val]
-    }
+  if (paramsSerializer) {
+    // 如果自定义了序列化参数的函数，则用用户自定义的方式去解析 params
+    serializedParams = paramsSerializer(params)
+  } else if (isURLSearchParams(params)) {
+    // 如果传进来的 params 已经是 URLSearchParams 类型了，那它已经是序列化好后的 params 了，直接把 toString 后的 params 传给 serializedParams 就行。
+    serializedParams = params.toString()
+  } else {
+    const parts: string[] = [] // 每个 item 是键值对 key=val，见 34 行
 
-    values.forEach(val => {
-      if (isDate(val)) {
-        val = val.toISOString
-      } else if (isPlainObject(val)) {
-        val = JSON.stringify(val)
+    Object.keys(params).forEach(key => {
+      const val = params[key]
+      if (val === null || typeof val === 'undefined') {
+        return // 跳出 forEach 的本轮循环，进入下一轮循环
       }
-      parts.push(`${encode(key)}=${encode(val)}`)
-    })
-  })
 
-  let serializedParams = parts.join('&')
+      let values = [] // 为不同 params 情况作统一处理用的临时数组
+      if (Array.isArray(val)) {
+        values = val
+        key += '[]'
+      } else {
+        values = [val]
+      }
+
+      values.forEach(val => {
+        if (isDate(val)) {
+          val = val.toISOString
+        } else if (isPlainObject(val)) {
+          val = JSON.stringify(val)
+        }
+        parts.push(`${encode(key)}=${encode(val)}`)
+      })
+    })
+
+    serializedParams = parts.join('&')
+  }
 
   if (serializedParams) {
     const markIndex = url.indexOf('#') // 忽略 hash

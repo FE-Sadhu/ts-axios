@@ -114,19 +114,59 @@ import axios from '../../src/index';
  * 自定义合法状态码 demo
  */
 
-axios.get('/more/304').then(res => {
+// axios.get('/more/304').then(res => {
+//   console.log(res)
+// }).catch(err => {
+//   console.log(err.message)
+// })
+
+
+// axios.get('/more/304', {
+//   validateStatus(status) {
+//     return status >= 200 && status < 400
+//   }
+// }).then(res => {
+//   console.log(res)
+// }).catch(err => {
+//   console.log(err.message)
+// })
+
+/**
+ * 自定义 params 解析规则 demo 
+ */
+
+import qs from 'qs'
+
+axios.get('/more/get', {
+  params: new URLSearchParams('a=b&c=d')
+}).then(res => {
   console.log(res)
-}).catch(err => {
-  console.log(err.message)
-})
+}).catch()
 
-
-axios.get('/more/304', {
-  validateStatus(status) {
-    return status >= 200 && status < 400
+axios.get('/more/get', {
+  params: {
+    a: 1,
+    b: 2,
+    c: ['a', 'b', 'c']
   }
 }).then(res => {
   console.log(res)
-}).catch(err => {
-  console.log(err.message)
+}).catch()
+
+const instance2 = axios.create({
+  paramsSerializer(params) {
+    return qs.stringify(params, { // 跟默认解析规则的区别是没有 decode 某些特殊字符。
+      arrayFormat: 'brackets'
+    })
+  }
 })
+
+instance2.get('/more/get', {
+  params: {
+    a: 1,
+    b: 2,
+    c: ['a', 'b', 'c']
+  }
+}).then(res => {
+  console.log(res)
+}).catch()

@@ -22,6 +22,10 @@ export function isFormData(val: any): val is FormData {
   return typeof val !== undefined && val instanceof FormData
 }
 
+export function isURLSearchParams(val: any): val is URLSearchParams {
+  return typeof val !== undefined && val instanceof URLSearchParams
+}
+
 export function extend<T, U>(to: T, from: U): U & T {
   // 辅助函数 -> 目的是把 from 上的属性都拓展到 to 中。包括原型上的属性
   for (const key in from) {
