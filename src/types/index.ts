@@ -34,6 +34,7 @@ export interface AxiosRequestConfig {
   auth?: AxiosBasicCredentials // 原始的服务器用于验证用户代理身份的凭证,现在一般用 token
   validateStatus?: (status: number) => boolean // 自定义合法状态码
   paramsSerializer?: (params: any) => void // 自己定义解析 url params 规则
+  baseURL?: string
 
   [propName: string]: any
 }

@@ -135,38 +135,49 @@ import axios from '../../src/index';
  * 自定义 params 解析规则 demo 
  */
 
-import qs from 'qs'
+// import qs from 'qs'
 
-axios.get('/more/get', {
-  params: new URLSearchParams('a=b&c=d')
-}).then(res => {
-  console.log(res)
-}).catch()
+// axios.get('/more/get', {
+//   params: new URLSearchParams('a=b&c=d')
+// }).then(res => {
+//   console.log(res)
+// }).catch()
 
-axios.get('/more/get', {
-  params: {
-    a: 1,
-    b: 2,
-    c: ['a', 'b', 'c']
-  }
-}).then(res => {
-  console.log(res)
-}).catch()
+// axios.get('/more/get', {
+//   params: {
+//     a: 1,
+//     b: 2,
+//     c: ['a', 'b', 'c']
+//   }
+// }).then(res => {
+//   console.log(res)
+// }).catch()
 
-const instance2 = axios.create({
-  paramsSerializer(params) {
-    return qs.stringify(params, { // 跟默认解析规则的区别是没有 decode 某些特殊字符。
-      arrayFormat: 'brackets'
-    })
-  }
+// const instance2 = axios.create({
+//   paramsSerializer(params) {
+//     return qs.stringify(params, { // 跟默认解析规则的区别是没有 decode 某些特殊字符。
+//       arrayFormat: 'brackets'
+//     })
+//   }
+// })
+
+// instance2.get('/more/get', {
+//   params: {
+//     a: 1,
+//     b: 2,
+//     c: ['a', 'b', 'c']
+//   }
+// }).then(res => {
+//   console.log(res)
+// }).catch()
+
+/**
+ * 测试 BaseURL 
+ */
+
+const instance3 = axios.create({
+  baseURL: 'https://img.mukewang.com/'
 })
 
-instance2.get('/more/get', {
-  params: {
-    a: 1,
-    b: 2,
-    c: ['a', 'b', 'c']
-  }
-}).then(res => {
-  console.log(res)
-}).catch()
+instance3.get('5cc01a7b0001a33718720632.gif')
+instance3.get('https://img.mukewang.com/szimg/5becd5ad0001b89306000338-360-202.jpg')
