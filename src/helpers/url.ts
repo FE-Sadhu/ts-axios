@@ -11,7 +11,7 @@ interface URLOrigin {
 
 function encode(val: string): string {
   return encodeURIComponent(val) // 等同于 decode 某些特殊字符
-    .replace(/40%/g, '@')
+    .replace(/%40/g, '@')
     .replace(/%3A/gi, ':') // i 是大小写都不区分
     .replace(/%24/g, '$')
     .replace(/%2C/gi, ',')
@@ -58,7 +58,7 @@ export function buildURL(
 
       values.forEach(val => {
         if (isDate(val)) {
-          val = val.toISOString
+          val = val.toISOString()
         } else if (isPlainObject(val)) {
           val = JSON.stringify(val)
         }
