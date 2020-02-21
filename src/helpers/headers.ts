@@ -36,14 +36,15 @@ export function parseHeaders(headers: string): any {
 
   headers.split('\r\n').forEach(line => {
     // 按回车符+换行符分割
-    let [key, val] = line.split(':')
+    let [key, ...vals] = line.split(':')
     key = key.trim().toLowerCase()
     if (!key) {
       return // 在 forEach 中是跳到下次循环
     }
-    if (val) {
-      val = val.trim()
-    }
+    const val = vals.join(':').trim()
+    // if (val) { 单元测试检测出来的错误，因为当 val 为时间格式时，时:分:秒 会有多个冒号，split(':') 时会分割出多个数组元素
+    //   val = val.trim()
+    // }
     parsed[key] = val
   })
 
