@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from '../types/index'
-import { isPlainObject, deepMerge } from '../helpers/utill'
+import { isPlainObject, deepMerge } from '../helpers/util'
 /**
  * 利用多个合并策略合并默认配置与自定义配置
  *

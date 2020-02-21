@@ -2,7 +2,7 @@
  * 根据传的 config 中的 params 拼接 url
  */
 
-import { isDate, isPlainObject, isURLSearchParams } from './utill'
+import { isDate, isPlainObject, isURLSearchParams } from './util'
 
 interface URLOrigin {
   protocol: string

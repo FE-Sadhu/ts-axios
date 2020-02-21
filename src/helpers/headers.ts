@@ -1,4 +1,4 @@
-import { isPlainObject, deepMerge } from './utill'
+import { isPlainObject, deepMerge } from './util'
 import { Method } from '../types/index'
 /**
  * 请求头的处理
