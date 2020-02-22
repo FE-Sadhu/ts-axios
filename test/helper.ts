@@ -6,7 +6,7 @@ export function getAjaxRequest(): Promise<JasmineAjaxRequest> {
   return new Promise(resolve => {
     setTimeout(() => {
       // 为什么需要异步返回呢？ 假如调用 getAjaxRequest 方法前有个异步发起的请求，这个方法为了获得最近一次的 xhr 对象必须也得异步获取。(例子可见拦截器的 test )
-      return resolve(jasmine.Ajax.requests.mostRecent()) // 返回一个 jasmine 框架伪造的 xhr 对象
+      resolve(jasmine.Ajax.requests.mostRecent()) // 返回一个 jasmine 框架伪造的 xhr 对象
     }, 0)
   })
 }
