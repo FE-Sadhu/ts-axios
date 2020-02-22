@@ -14,9 +14,7 @@ function defaultStrat(val1: any, val2: any): any {
 }
 // 合并策略2 -> 忽略 val1 的值 (比如 url、data、params 等字段就需要忽略默认配置的值)
 function fromVal2Strat(val1: any, val2: any): any {
-  if (typeof val2 !== 'undefined') {
-    return val2
-  }
+  return val2
 }
 // 复杂对象的合并策略 -> 针对 headers 字段
 function deepMergeStrat(val1: any, val2: any): any {
@@ -27,7 +25,8 @@ function deepMergeStrat(val1: any, val2: any): any {
     return val2
   } else if (isPlainObject(val1)) {
     return deepMerge(val1)
-  } else if (typeof val1 !== 'undefined') {
+  } else {
+    // 单元测试检测出来的，优化了，因为此时无论 val1 有值或为 undefined ，都可以返回 val
     return val1
   }
 }
