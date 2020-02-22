@@ -22,7 +22,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       data = null,
       url,
       method = 'get',
-      headers,
+      headers = {}, // 单元测试检测出来的，当通过拦截器替换了没有 headers 字段的 config 时，下面的 Object.keys(headers) 会出错
       responseType,
       timeout,
       cancelToken,
