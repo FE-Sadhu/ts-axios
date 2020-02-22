@@ -46,6 +46,7 @@ export default class Axios {
 
     // 传进来的 config 与 默认 config 合并
     config = mergeConfig(this.defaults, config)
+    config.method = config.method.toLowerCase() // 如果是大写的话，后面 flattenHeaders 时会出错。
 
     // 链式调用拦截器
     const chain: PromiseChain<any>[] = [
