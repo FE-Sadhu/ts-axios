@@ -7,6 +7,8 @@ export class AxiosError extends Error {
   request?: any
   response?: AxiosResponse
 
+  // super 继承对测试覆盖率支持的坑，目前没有好的解决方案，可以先忽略。下面那句注释就是单元测试可以忽略不测这个构造函数
+  /* istanbul ignore next */
   constructor(
     message: string,
     config: AxiosRequestConfig,
