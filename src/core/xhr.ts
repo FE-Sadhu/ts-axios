@@ -21,7 +21,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     const {
       data = null,
       url,
-      method = 'get',
+      method,
       headers = {}, // 单元测试检测出来的，当通过拦截器替换了没有 headers 字段的 config 时，下面的 Object.keys(headers) 会出错
       responseType,
       timeout,
@@ -37,7 +37,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     const request = new XMLHttpRequest()
 
-    request.open(method.toUpperCase(), url!, true)
+    request.open(method!.toUpperCase(), url!, true)
 
     configureXMLHttpRequest()
 
@@ -95,7 +95,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
           return
         }
         const responseHeaders = parseHeaders(request.getAllResponseHeaders()) // 所有响应头
-        const responseData = responseType !== 'text' ? request.response : request.responseText // 响应数据
+        const responseData =
+          responseType && responseType !== 'text' ? request.response : request.responseText // 响应数据 -> 按规定，若 responseType 没有设置，即默认值为 ""，响应数据只能通过 xhr.responseText 来获得，并且为字符串类型。
         const response: AxiosResponse = {
           data: responseData,
           status: request.status,
