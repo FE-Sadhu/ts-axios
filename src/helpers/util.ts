@@ -19,10 +19,12 @@ export function isPlainObject(val: any): val is Object {
 }
 
 export function isFormData(val: any): val is FormData {
+  // tslint:disable-next-line: strict-type-predicates
   return typeof val !== undefined && val instanceof FormData
 }
 
 export function isURLSearchParams(val: any): val is URLSearchParams {
+  // tslint:disable-next-line: strict-type-predicates
   return typeof val !== undefined && val instanceof URLSearchParams
 }
 
